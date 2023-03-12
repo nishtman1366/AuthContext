@@ -1,25 +1,33 @@
+import React from 'react';
+import {BrowserRouter, Link, Switch, useRoutes, Routes, Route} from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
+import axios from "axios";
+import Home from "./Pages/Home";
+import {About} from "./Pages/About";
+import {Services} from "./Pages/Services";
+import {Login} from "./Pages/Login";
+import {ProtectedRoute} from "./components/ProtectedRoute";
+import GuestLayout from "./Layouts/GuestLayout";
+import AuthenticatedLayout from "./Layouts/AuthenticatedLayout";
+import {AuthProvider, useAuth} from "./Context/AuthenticationContext";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App(props) {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route element={<AuthProvider><GuestLayout/></AuthProvider>}>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/about" element={<About/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                </Route>
+                <Route element={<AuthProvider><AuthenticatedLayout/></AuthProvider>}>
+                    <Route path="/services"
+                           element={<ProtectedRoute><Services/></ProtectedRoute>}/>
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;
